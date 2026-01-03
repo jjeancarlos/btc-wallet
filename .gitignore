@@ -1,0 +1,22 @@
+# --- Binaries and Compiled Files (NEVER commit) ---
+# The Linux/Mac binary
+btc-wallet
+# The Windows binary
+*.exe
+*.dll
+
+# --- System and IDE Files (Junk) ---
+.DS_Store
+.vscode/
+.idea/
+*.swp
+
+# --- Security (Preventive) ---
+# Ignore text files or logs where you might
+# have accidentally saved the seed
+*.txt
+*.log
+*.json
+secret*
+seed*
+backup*
