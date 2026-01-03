@@ -147,7 +147,3 @@ This project is licensed under the MIT License - see the [LICENSE](LICENSE) file
 ---
 
 **Disclaimer:** This software is provided "as is", without warranty of any kind. The user is solely responsible for the safe storage of the generated keys.
-
-```
-
-```
