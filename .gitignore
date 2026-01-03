@@ -20,3 +20,6 @@ btc-wallet
 secret*
 seed*
 backup*
+
+# --- Distribution / Releases ---
+dist/

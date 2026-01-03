@@ -30,13 +30,11 @@ This project uses battle-tested libraries standard in the Bitcoin ecosystem:
 * Go 1.20+ installed.
 
 ### 1. Clone the repository
-
 ```bash
 git clone https://github.com/jjeancarlos/btc-wallet.git
 ```
 ```bash
 cd btc-wallet
-
 ```
 
 ### 2. Verify Integrity (Optional but Recommended)
@@ -80,6 +78,56 @@ Move the binary to your offline machine via USB and run:
 
 ```
 
+## 🛡️ Verifying Authenticity (Don't Trust, Verify)
+
+To guarantee that the binaries you downloaded have not been tampered with and were created by the original developer, follow these steps:
+
+### 1. Download the files
+
+Download the binary for your OS, plus `SHA256SUMS.txt` and `SHA256SUMS.txt.asc` from the [suspicious link removed].
+
+### 2. Verify the Checksum (Integrity)
+
+Open your terminal in the download folder and run:
+
+**Linux / macOS:**
+
+```bash
+# This command checks if the file matches the hash list
+shasum -a 256 -c SHA256SUMS.txt --ignore-missing
+
+```
+
+*Expected Output:* `btc-wallet-linux-amd64: OK`
+
+**Windows (PowerShell):**
+
+```powershell
+Get-FileHash .\btc-wallet-windows-amd64.exe -Algorithm SHA256
+# Compare the output hash manually with the one in SHA256SUMS.txt
+
+```
+
+### 3. Verify the Signature (Authenticity)
+
+This ensures the `SHA256SUMS.txt` file was signed by the developer's GPG Key.
+
+First, import the developer's public key (if you haven't already):
+
+```bash
+gpg --keyserver keyserver.ubuntu.com --recv-keys FE125B66F25875A56B129BE8FB9E2F51656B1941
+
+```
+
+Then verify the signature:
+
+```bash
+gpg --verify SHA256SUMS.txt.asc SHA256SUMS.txt
+
+```
+
+*Expected Output:* `Good signature from "jjeancarlos <jeanpastebin@gmail.com>"`
+
 ## 📝 Usage Flow
 
 1. The tool checks for internet connection.
@@ -99,3 +147,7 @@ This project is licensed under the MIT License - see the [LICENSE](LICENSE) file
 ---
 
 **Disclaimer:** This software is provided "as is", without warranty of any kind. The user is solely responsible for the safe storage of the generated keys.
+
+```
+
+```
