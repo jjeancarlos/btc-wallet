@@ -5,6 +5,8 @@ A minimalist, high-security, offline CLI tool written in Go to generate Bitcoin 
 It strictly follows **BIP-39** (Mnemonic) and **BIP-84** (Native SegWit) standards, using cryptographically strong entropy from the operating system (`crypto/rand`).
 
 > ⚠️ **SECURITY WARNING**: This tool is designed to be run on an **OFFLINE (Air-gapped)** computer. Do not generate real funds on a machine connected to the internet.
+>
+> 👉 **[Read our Security & OpSec Guide](GUIDE.md)** to learn how to prepare a secure environment (Tails OS, Physical Backup, etc).
 
 ## 🔒 Security Features
 
@@ -139,6 +141,12 @@ gpg --verify SHA256SUMS.txt.asc SHA256SUMS.txt
 
 
 4. Upon exit, it attempts to clear the screen and wipe memory variables.
+
+## 🐛 Reporting Vulnerabilities
+
+If you have found a security vulnerability, please **do not** open a public issue.
+
+Read our [Security Policy](SECURITY.md) for instructions on how to report it securely using PGP encryption.
 
 ## 📄 License
 
