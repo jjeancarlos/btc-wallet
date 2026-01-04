@@ -84,7 +84,7 @@ To guarantee that the binaries you downloaded have not been tampered with and we
 
 ### 1. Download the files
 
-Download the binary for your OS, plus `SHA256SUMS.txt` and `SHA256SUMS.txt.asc` from the [suspicious link removed].
+Download the binary for your OS, plus `SHA256SUMS.txt` and `SHA256SUMS.txt.asc` from the [Releases page](https://github.com/jjeancarlos/btc-wallet/releases).
 
 ### 2. Verify the Checksum (Integrity)
 
