@@ -2,13 +2,16 @@
 
 A minimalist, security-focused, **offline** CLI tool written in Go to generate Bitcoin wallets.
 
-It strictly follows **BIP-39** (Mnemonic), **BIP-32** (HD Wallets), and **BIP-84** (Native SegWit) standards, using cryptographically strong entropy provided by the operating system via Go’s `crypto/rand`.
+It strictly follows **BIP-39** (Mnemonic), **BIP-32** (HD Wallets), and **BIP-84** (Native SegWit) standards, using cryptographically strong entropy provided by the operating system via Go’s `crypto/rand` package.
 
 > ⚠️ **SECURITY WARNING**
+>
 > This tool is designed to be run on an **OFFLINE (air-gapped)** computer.
 > **Do not generate real funds on a machine connected to the internet.**
 >
-> 👉 **[Read the Security & OpSec Guide](GUIDE.md)** to learn how to prepare a secure environment (Tails OS, air-gapped machines, physical backups, etc).
+> 👉 **[Read the Security & OpSec Guide](GUIDE.md)** to learn how to prepare a secure environment
+> (Tails OS, air-gapped machines, physical backups, etc).
+>
 > ⚠️ **Version Notice**
 >
 > Releases **prior to v1.1.0** do **NOT** support BIP-39 passphrases and may display
@@ -21,42 +24,68 @@ It strictly follows **BIP-39** (Mnemonic), **BIP-32** (HD Wallets), and **BIP-84
 
 ## 🔒 Security Features
 
-* **Zero External APIs**
+* **Zero External APIs**  
   No data is ever sent to the network.
 
-* **Internet Connectivity Warning**
-  Detects common outbound connectivity and warns the user if a network connection is detected before proceeding.
+* **Internet Connectivity Warning**  
+  Detects common outbound network connectivity and warns the user before proceeding.
 
-* **Best-effort Memory Wiping**
-  Attempts to overwrite sensitive byte slices (entropy, seed, and passphrase buffers) immediately after use.
-  Due to Go runtime behavior and garbage collection semantics, complete memory erasure **cannot be guaranteed**.
+* **Best-effort Memory Wiping**  
+  Attempts to overwrite sensitive byte slices (entropy, seed, and passphrase buffers)
+  immediately after use.  
+  Due to Go runtime behavior and garbage collection semantics, complete memory erasure
+  **cannot be guaranteed** and must not be relied upon as the sole protection mechanism.
 
-* **Strong Entropy**
-  Uses **256-bit (32 bytes)** entropy generated via Go’s `crypto/rand`, backed by the operating system’s CSPRNG.
+* **Strong Entropy**  
+  Uses **256-bit (32 bytes)** entropy generated via Go’s `crypto/rand`,
+  backed by the operating system’s CSPRNG.
 
-* **Optional BIP-39 Passphrase Support**
-  Allows the use of an additional BIP-39 passphrase to protect against physical seed exposure and add plausible deniability.
+* **Optional BIP-39 Passphrase Support**  
+  Supports an additional BIP-39 passphrase to protect against physical seed exposure
+  and provide plausible deniability.
 
 * **Bitcoin Standards Compliance**
-
   * **BIP-39**: 24-word mnemonic seed phrase
   * **BIP-32**: Hierarchical Deterministic wallet structure
-  * **BIP-84**: Native SegWit addresses (`bc1q...`) for lower fees and modern wallet compatibility
+  * **BIP-84**: Native SegWit addresses (`bc1q...`) for modern wallet compatibility and lower fees
+
+---
+
+### ⚠️ Important: BIP-39 Passphrase Compatibility
+
+If you choose to use a BIP-39 passphrase, be aware that:
+
+- A mnemonic seed **with** a passphrase and the same seed **without** a passphrase
+  generate **completely different wallets**
+- Restoring the 24-word seed **without the correct passphrase** will result in
+  a valid but **empty wallet**
+
+Some wallet software and hardware devices:
+- Do not clearly prompt for a BIP-39 passphrase during restoration
+- Label it as “optional”, “advanced”, or “25th word”
+- Default to **no passphrase** if the user does not explicitly enter one
+
+**Always ensure that the wallet used for recovery fully supports BIP-39 passphrases
+and that the passphrase is entered exactly as originally used.**
+
+Failure to do so does **not** mean your funds are lost — it usually means the wallet
+was restored incorrectly.
 
 ---
 
 ## 🛠 Dependencies
 
-This project relies only on well-known, battle-tested libraries commonly used in the Bitcoin ecosystem:
+This project relies only on well-known, battle-tested libraries commonly used
+in the Bitcoin ecosystem:
 
-* [`github.com/btcsuite/btcd`](https://github.com/btcsuite/btcd)
+* [`github.com/btcsuite/btcd`](https://github.com/btcsuite/btcd)  
   Reference Bitcoin protocol implementation in Go.
 
-* [`github.com/tyler-smith/go-bip39`](https://github.com/tyler-smith/go-bip39)
+* [`github.com/tyler-smith/go-bip39`](https://github.com/tyler-smith/go-bip39)  
   Industry-standard BIP-39 mnemonic generation library.
 
-* [`golang.org/x/term`](https://pkg.go.dev/golang.org/x/term)
-  Secure terminal input (used to read passphrases without echoing).
+* [`golang.org/x/term`](https://pkg.go.dev/golang.org/x/term)  
+  Secure terminal input used to read passphrases without echoing.
 
 ---
 
@@ -73,13 +102,13 @@ This project relies only on well-known, battle-tested libraries commonly used in
 ```bash
 git clone https://github.com/jjeancarlos/btc-wallet.git
 cd btc-wallet
-```
+````
 
 ---
 
 ### 2. Verify Dependency Integrity (Optional but Recommended)
 
-Inspect `go.sum` to verify that dependencies have not been tampered with:
+Inspect `go.sum` to ensure dependencies have not been tampered with:
 
 ```bash
 cat go.sum
@@ -121,7 +150,8 @@ Transfer the compiled binary to your offline machine via USB and run:
 
 ## 🛡️ Verifying Authenticity (Don’t Trust, Verify)
 
-To ensure the binaries were not tampered with and were produced by the original developer, follow these steps.
+To ensure the binaries were not tampered with and were produced by the original
+developer, follow these steps.
 
 ### 1. Download the release files
 
@@ -211,7 +241,9 @@ It **does not** protect against:
 
 ## ⚠️ Virtual Machines
 
-Generating wallets inside virtual machines is discouraged unless the VM provides strong entropy guarantees and has **no shared clipboard, folders, or devices** enabled.
+Generating wallets inside virtual machines is discouraged unless the VM provides
+strong entropy guarantees and has **no shared clipboard, folders, or devices**
+enabled.
 
 ---
 
@@ -219,7 +251,8 @@ Generating wallets inside virtual machines is discouraged unless the VM provides
 
 If you discover a security vulnerability, please **do not open a public issue**.
 
-Refer to the [Security Policy](SECURITY.md) for instructions on responsible disclosure using PGP encryption.
+Refer to the [Security Policy](SECURITY.md) for instructions on responsible
+disclosure using PGP encryption.
 
 ---
 
