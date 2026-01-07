@@ -9,6 +9,13 @@ It strictly follows **BIP-39** (Mnemonic), **BIP-32** (HD Wallets), and **BIP-84
 > **Do not generate real funds on a machine connected to the internet.**
 >
 > 👉 **[Read the Security & OpSec Guide](GUIDE.md)** to learn how to prepare a secure environment (Tails OS, air-gapped machines, physical backups, etc).
+> ⚠️ **Version Notice**
+>
+> Releases **prior to v1.1.0** do **NOT** support BIP-39 passphrases and may display
+> incorrect master fingerprint information.
+>
+> **Do not use older releases to generate wallets intended to hold real funds.**
+> Always use the latest release and verify signatures before execution.
 
 ---
 
