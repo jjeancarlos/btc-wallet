@@ -1,157 +1,228 @@
 # btc-wallet (Cold Storage Generator)
 
-A minimalist, high-security, offline CLI tool written in Go to generate Bitcoin wallets.
+A minimalist, security-focused, **offline** CLI tool written in Go to generate Bitcoin wallets.
 
-It strictly follows **BIP-39** (Mnemonic) and **BIP-84** (Native SegWit) standards, using cryptographically strong entropy from the operating system (`crypto/rand`).
+It strictly follows **BIP-39** (Mnemonic), **BIP-32** (HD Wallets), and **BIP-84** (Native SegWit) standards, using cryptographically strong entropy provided by the operating system via Go’s `crypto/rand`.
 
-> ⚠️ **SECURITY WARNING**: This tool is designed to be run on an **OFFLINE (Air-gapped)** computer. Do not generate real funds on a machine connected to the internet.
+> ⚠️ **SECURITY WARNING**
+> This tool is designed to be run on an **OFFLINE (air-gapped)** computer.
+> **Do not generate real funds on a machine connected to the internet.**
 >
-> 👉 **[Read our Security & OpSec Guide](GUIDE.md)** to learn how to prepare a secure environment (Tails OS, Physical Backup, etc).
+> 👉 **[Read the Security & OpSec Guide](GUIDE.md)** to learn how to prepare a secure environment (Tails OS, air-gapped machines, physical backups, etc).
+
+---
 
 ## 🔒 Security Features
 
-* **Zero Dependencies on External APIs**: No data is ever sent to the network.
-* **Internet Kill Switch**: Detects active connections and warns the user before proceeding.
-* **Memory Wiping**: Attempts to zeroize entropy and seed variables from memory immediately after use.
-* **Strong Entropy**: Uses 256-bit (32 bytes) entropy via Go's `crypto/rand` (OS CSPRNG).
-* **Standard Compliance**:
-    * **BIP-39**: 24-word mnemonic phrase.
-    * **BIP-84**: Modern Native SegWit addresses (`bc1q...`) for lower fees.
-    * **BIP-32**: Hierarchical Deterministic wallet structure.
+* **Zero External APIs**
+  No data is ever sent to the network.
+
+* **Internet Connectivity Warning**
+  Detects common outbound connectivity and warns the user if a network connection is detected before proceeding.
+
+* **Best-effort Memory Wiping**
+  Attempts to overwrite sensitive byte slices (entropy, seed, and passphrase buffers) immediately after use.
+  Due to Go runtime behavior and garbage collection semantics, complete memory erasure **cannot be guaranteed**.
+
+* **Strong Entropy**
+  Uses **256-bit (32 bytes)** entropy generated via Go’s `crypto/rand`, backed by the operating system’s CSPRNG.
+
+* **Optional BIP-39 Passphrase Support**
+  Allows the use of an additional BIP-39 passphrase to protect against physical seed exposure and add plausible deniability.
+
+* **Bitcoin Standards Compliance**
+
+  * **BIP-39**: 24-word mnemonic seed phrase
+  * **BIP-32**: Hierarchical Deterministic wallet structure
+  * **BIP-84**: Native SegWit addresses (`bc1q...`) for lower fees and modern wallet compatibility
+
+---
 
 ## 🛠 Dependencies
 
-This project uses battle-tested libraries standard in the Bitcoin ecosystem:
+This project relies only on well-known, battle-tested libraries commonly used in the Bitcoin ecosystem:
 
-* [`github.com/btcsuite/btcd`](https://github.com/btcsuite/btcd): The reference implementation of Bitcoin in Go.
-* [`github.com/tyler-smith/go-bip39`](https://github.com/tyler-smith/go-bip39): Industry standard for mnemonic generation.
+* [`github.com/btcsuite/btcd`](https://github.com/btcsuite/btcd)
+  Reference Bitcoin protocol implementation in Go.
+
+* [`github.com/tyler-smith/go-bip39`](https://github.com/tyler-smith/go-bip39)
+  Industry-standard BIP-39 mnemonic generation library.
+
+* [`golang.org/x/term`](https://pkg.go.dev/golang.org/x/term)
+  Secure terminal input (used to read passphrases without echoing).
+
+---
 
 ## 🚀 How to Build & Run
 
 ### Prerequisites
-* Go 1.20+ installed.
+
+* Go **1.20+**
+
+---
 
 ### 1. Clone the repository
+
 ```bash
 git clone https://github.com/jjeancarlos/btc-wallet.git
-```
-```bash
 cd btc-wallet
 ```
 
-### 2. Verify Integrity (Optional but Recommended)
+---
 
-Check `go.sum` to ensure dependencies haven't been tampered with.
+### 2. Verify Dependency Integrity (Optional but Recommended)
+
+Inspect `go.sum` to verify that dependencies have not been tampered with:
 
 ```bash
 cat go.sum
-
 ```
+
+---
 
 ### 3. Build the Binary
 
-**For Linux (Recommended for Live USBs like Tails/Ubuntu):**
+**Linux (recommended for Live USBs such as Tails or Ubuntu Live):**
 
 ```bash
 GOOS=linux GOARCH=amd64 go build -o btc-wallet main.go
-
 ```
 
-**For Windows:**
+**Windows:**
 
 ```bash
 GOOS=windows GOARCH=amd64 go build -o btc-wallet.exe main.go
-
 ```
 
-**For macOS (Apple Silicon):**
+**macOS (Apple Silicon):**
 
 ```bash
 GOOS=darwin GOARCH=arm64 go build -o btc-wallet main.go
-
 ```
+
+---
 
 ### 4. Run (Offline)
 
-Move the binary to your offline machine via USB and run:
+Transfer the compiled binary to your offline machine via USB and run:
 
 ```bash
 ./btc-wallet
-
 ```
 
-## 🛡️ Verifying Authenticity (Don't Trust, Verify)
+---
 
-To guarantee that the binaries you downloaded have not been tampered with and were created by the original developer, follow these steps:
+## 🛡️ Verifying Authenticity (Don’t Trust, Verify)
 
-### 1. Download the files
+To ensure the binaries were not tampered with and were produced by the original developer, follow these steps.
 
-Download the binary for your OS, plus `SHA256SUMS.txt` and `SHA256SUMS.txt.asc` from the [Releases page](https://github.com/jjeancarlos/btc-wallet/releases).
+### 1. Download the release files
+
+From the [Releases page](https://github.com/jjeancarlos/btc-wallet/releases), download:
+
+* The binary for your OS
+* `SHA256SUMS.txt`
+* `SHA256SUMS.txt.asc`
+
+---
 
 ### 2. Verify the Checksum (Integrity)
-
-Open your terminal in the download folder and run:
 
 **Linux / macOS:**
 
 ```bash
-# This command checks if the file matches the hash list
 shasum -a 256 -c SHA256SUMS.txt --ignore-missing
-
 ```
 
-*Expected Output:* `btc-wallet-linux-amd64: OK`
+Expected output:
+
+```
+btc-wallet-linux-amd64: OK
+```
 
 **Windows (PowerShell):**
 
 ```powershell
 Get-FileHash .\btc-wallet-windows-amd64.exe -Algorithm SHA256
-# Compare the output hash manually with the one in SHA256SUMS.txt
-
 ```
 
-### 3. Verify the Signature (Authenticity)
-
-This ensures the `SHA256SUMS.txt` file was signed by the developer's GPG Key.
-
-First, import the developer's public key (if you haven't already):
-
-```bash
-gpg --keyserver keyserver.ubuntu.com --recv-keys FE125B66F25875A56B129BE8FB9E2F51656B1941
-
-```
-
-Then verify the signature:
-
-```bash
-gpg --verify SHA256SUMS.txt.asc SHA256SUMS.txt
-
-```
-
-*Expected Output:* `Good signature from "jjeancarlos <jeanpastebin@gmail.com>"`
-
-## 📝 Usage Flow
-
-1. The tool checks for internet connection.
-2. If offline, it generates 256-bit entropy.
-3. It displays:
-* **24-Word Seed Phrase** (Write this down!)
-* **First Receiving Address** (Native SegWit)
-* **Master Fingerprint**
-
-
-4. Upon exit, it attempts to clear the screen and wipe memory variables.
-
-## 🐛 Reporting Vulnerabilities
-
-If you have found a security vulnerability, please **do not** open a public issue.
-
-Read our [Security Policy](SECURITY.md) for instructions on how to report it securely using PGP encryption.
-
-## 📄 License
-
-This project is licensed under the MIT License - see the [LICENSE](LICENSE) file for details.
+Manually compare the output with the hash listed in `SHA256SUMS.txt`.
 
 ---
 
-**Disclaimer:** This software is provided "as is", without warranty of any kind. The user is solely responsible for the safe storage of the generated keys.
+### 3. Verify the Signature (Authenticity)
+
+Import the developer’s public GPG key:
+
+```bash
+gpg --keyserver keyserver.ubuntu.com --recv-keys FE125B66F25875A56B129BE8FB9E2F51656B1941
+```
+
+Verify the signature:
+
+```bash
+gpg --verify SHA256SUMS.txt.asc SHA256SUMS.txt
+```
+
+Expected output:
+
+```
+Good signature from "jjeancarlos <jeanpastebin@gmail.com>"
+```
+
+---
+
+## 📝 Usage Flow
+
+1. The tool checks for active internet connectivity.
+2. If offline (or explicitly approved), it generates **256-bit entropy**.
+3. The following information is displayed:
+
+   * **24-word BIP-39 mnemonic seed** (write it down securely)
+   * **Optional BIP-39 passphrase prompt**
+   * **First receiving address** (Native SegWit)
+   * **Master fingerprint** (BIP-32 compliant)
+4. On exit, the tool clears the terminal and attempts best-effort memory cleanup.
+
+---
+
+## 🎯 Threat Model
+
+This tool is designed to protect against:
+
+* Remote attackers
+* Network-based data exfiltration
+* Accidental key reuse
+
+It **does not** protect against:
+
+* Compromised firmware, BIOS, or hardware
+* Malicious Go compiler or runtime
+* Physical attackers observing the key generation process
+
+---
+
+## ⚠️ Virtual Machines
+
+Generating wallets inside virtual machines is discouraged unless the VM provides strong entropy guarantees and has **no shared clipboard, folders, or devices** enabled.
+
+---
+
+## 🐛 Reporting Vulnerabilities
+
+If you discover a security vulnerability, please **do not open a public issue**.
+
+Refer to the [Security Policy](SECURITY.md) for instructions on responsible disclosure using PGP encryption.
+
+---
+
+## 📄 License
+
+This project is licensed under the MIT License.
+See the [LICENSE](LICENSE) file for details.
+
+---
+
+**Disclaimer:**
+This software is provided *“as is”*, without warranty of any kind.
+The user is solely responsible for the secure storage of generated keys and backups.
