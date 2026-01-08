@@ -71,7 +71,6 @@ and that the passphrase is entered exactly as originally used.**
 Failure to do so does **not** mean your funds are lost — it usually means the wallet
 was restored incorrectly.
 
----
 
 ## 🛠 Dependencies
 
@@ -101,6 +100,9 @@ in the Bitcoin ecosystem:
 
 ```bash
 git clone https://github.com/jjeancarlos/btc-wallet.git
+```
+
+```bash
 cd btc-wallet
 ````
 
@@ -145,8 +147,6 @@ Transfer the compiled binary to your offline machine via USB and run:
 ```bash
 ./btc-wallet
 ```
-
----
 
 ## 🛡️ Verifying Authenticity (Don’t Trust, Verify)
 
@@ -207,7 +207,6 @@ Expected output:
 Good signature from "jjeancarlos <jeanpastebin@gmail.com>"
 ```
 
----
 
 ## 📝 Usage Flow
 
@@ -221,7 +220,6 @@ Good signature from "jjeancarlos <jeanpastebin@gmail.com>"
    * **Master fingerprint** (BIP-32 compliant)
 4. On exit, the tool clears the terminal and attempts best-effort memory cleanup.
 
----
 
 ## 🎯 Threat Model
 
@@ -237,7 +235,6 @@ It **does not** protect against:
 * Malicious Go compiler or runtime
 * Physical attackers observing the key generation process
 
----
 
 ## ⚠️ Virtual Machines
 
@@ -245,7 +242,6 @@ Generating wallets inside virtual machines is discouraged unless the VM provides
 strong entropy guarantees and has **no shared clipboard, folders, or devices**
 enabled.
 
----
 
 ## 🐛 Reporting Vulnerabilities
 
@@ -254,14 +250,10 @@ If you discover a security vulnerability, please **do not open a public issue**.
 Refer to the [Security Policy](SECURITY.md) for instructions on responsible
 disclosure using PGP encryption.
 
----
-
 ## 📄 License
 
 This project is licensed under the MIT License.
 See the [LICENSE](LICENSE) file for details.
-
----
 
 **Disclaimer:**
 This software is provided *“as is”*, without warranty of any kind.
